@@ -3,6 +3,7 @@ package edu.grinnell.csc207.spellchecker;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,7 +27,23 @@ public class SpellChecker {
 
     /** A Node of the SpellChecker structure. */
     private class Node {
-        // TODO: implement me!
+        boolean isRoot;
+        
+        char value;
+        boolean isWord;
+        List<Node> nodes;
+        
+        public Node() {
+            isRoot = true;
+            isWord = false;
+            nodes = new ArrayList<>();
+        }
+        
+        public Node(char value) {
+            isRoot = false;
+            this.value = value;
+            nodes = new ArrayList<>();
+        }
     }
 
     /** The root of the SpellChecker */
@@ -37,7 +54,29 @@ public class SpellChecker {
     }
 
     public void add(String word) {
-        // TODO: implement me!
+        Node curr = root;
+        Node newNode;
+        for (char ch : word.toCharArray()) {
+            newNode = getNode(ch, curr);
+            if (newNode == null) {
+                newNode = new Node(ch);
+                curr.nodes.add(newNode);
+            }
+            curr = newNode;
+        }
+        curr.isWord = true;
+    }
+    
+    private Node getNode(char ch, Node curr) {
+        if (curr.nodes.isEmpty()) {
+            return null;
+        }
+        for (Node node : curr.nodes) {
+            if (node.value == ch) {
+                return node;
+            }
+        }
+        return null;
     }
 
     public boolean isWord(String word) {
